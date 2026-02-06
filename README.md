@@ -41,9 +41,3 @@ The curriculum follows a specialized track combining **Algorithms, Data Science,
 
 ## 🎓 About the Program
 The **Aarhus University MSc in Bioinformatics** is an interdisciplinary program hosted by the **Bioinformatics Research Centre (BiRC)**. It integrates Mathematics, Statistics, and Computer Science to address complex biological questions, from molecular evolution to personalized medicine.
-
----
-
-## 📫 Connect with me
-* **LinkedIn:** [Insert your profile link here]
-* **Email:** [Insert your email address here]
