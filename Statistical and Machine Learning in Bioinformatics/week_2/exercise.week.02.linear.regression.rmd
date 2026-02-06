@@ -11,24 +11,23 @@ editor_options:
 
 We will work on a small dataset on blood pressure with the following variables:
 
-* Blood pressure (mm Hg)  
-* Age (years)  
-* Weight (grams)
-* Blood pressure class (4 levels)
+-   Blood pressure (mm Hg)\
+-   Age (years)\
+-   Weight (grams)
+-   Blood pressure class (4 levels)
 
 The Blood pressure class has 4 levels
 
-* Low: <90
-* Ideal: 90-120
-* Pre-high blood pressure: >120-140
-* High bp: >140
-
+-   Low: \<90
+-   Ideal: 90-120
+-   Pre-high blood pressure: \>120-140
+-   High bp: \>140
 
 ```{r}
 
 library(tidyverse)
 
-df <- read_csv(file = "blood_pressure.csv") %>%
+df <- read_csv(file = "data/blood_pressure.csv") %>%
   select(-class)
 
 df
@@ -37,13 +36,14 @@ df
 
 ## Regression with multiple variables
 
->Q1: Do a full regression model with and without interaction
+> Q1: Do a full regression model with and without interaction
 
 You should predict blood pressure from age and weight.
 
 How much of the variation is explained by the two models?
 
 Is the interaction significant?
+
 ```{r}
 # Model with age and weight
 model_main <- lm(bp ~ age + weight, data = df)
@@ -62,10 +62,9 @@ summary(model_interaction)
 anova(model_main, model_interaction)
 ```
 
+------------------------------------------------------------------------
 
----
-
->Q2: Do you see anything wrong with the model?
+> Q2: Do you see anything wrong with the model?
 
 Yep - we're fishing for a residual plot...
 
@@ -93,10 +92,9 @@ plot(model_main, which = 5)
 
 ```
 
+------------------------------------------------------------------------
 
----
-
->Q3: What is the predicted bp of an typical 35 kg 12 year old boy and a 60 year old fat man (250 kg)?
+> Q3: What is the predicted bp of an typical 35 kg 12 year old boy and a 60 year old fat man (250 kg)?
 
 ```{r}
 # I need to create a small table with the new people I want to predict for.
@@ -120,24 +118,22 @@ predictions
 #    the narrow age/weight range of the original training data.
 
 ```
- 
 
----
+------------------------------------------------------------------------
 
 # The ALS data
 
->Q4: What is the estimated performance (RMSE) of a full linear model using all predictors (without interaction)
+> Q4: What is the estimated performance (RMSE) of a full linear model using all predictors (without interaction)
 
 Hint: repeated cross validation, I suggest 5 runs of 10 fold CV.
 
-Hint 2: lm(y ~ .) means lm(y ~ "all other columns in the dataset).
+Hint 2: lm(y \~ .) means lm(y \~ "all other columns in the dataset).
 
 If you are up for it: also get the training RMSE (by fitting all data and predicting on same data).
 
-
 ```{r, warning=F, message=F}
 
-als_data <- read_rds("../../week_1/exercise/ALS_progression_rate.1822x370.rds")
+als_data <- read_rds("../week_1/data/ALS_progression_rate.1822x370.rds")
 
 als_data <- als_data %>% 
   filter(!is.na(dFRS))
@@ -145,7 +141,6 @@ als_data <- als_data %>%
 head(als_data)
 
 ```
-
 
 ```{r}
 
@@ -210,6 +205,4 @@ rmse_folds
 
 ```
 
-
 # Well done!
-
