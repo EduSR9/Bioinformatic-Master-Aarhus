@@ -201,10 +201,42 @@ tibble(x=1:length(cvfolds), y=cvfolds) %>%
 
 This time you should use a new partition of the data into 10 folds.
 
+```{r}
+
+# New folds
+cvfolds <- sample(cut(1:nrow(als_data), breaks = 10, labels = F))
+
+rmse_results <- rep(NA, 10)
+
+for(fold in 1:10){
+  # Create the training and test data
+  als_data$fold <- cvfolds
+
+  # We choose the current fold to test
+  id_test <- fold
+  als_test_data  <- als_data[cvfolds == id_test, ]
+  als_train_data <- als_data[cvfolds != id_test, ]
+  fit       <- lm(dFRS ~ . - fold, data=als_train_data)
+  predicted       <- predict(fit, newdata=als_test_data)
+  residuals <- als_test_data$dFRS - predicted
+  se    <- (residuals)^2
+  mse   <- mean(se)
+  rmse <- sqrt(mse)
+  rmse_results[fold] <- rmse
+}
+# The mean of all the rmse
+(mean(rmse_results))
+
+barplot(rmse_results, names.arg = 1:10, main = "RMSE by Fold", 
+        xlab = "Fold", ylab = "RMSE", col = "steelblue")
+
+```
+
 
 ## Q4: Why did you get a different RMSE?
 
-
+We get a different RMSE each time because the data partitioning is randomized.
+The model "learn" from a different group each time.
 
 # Collect all these steps into a function
 
@@ -218,9 +250,41 @@ Test that it works for 2, 5 and 10 folds.
 
 Make at least 3 runs with different seeds for k=2,5,10
 
+```{r}
+
+cv_rmse <- function(data, k){
+  cvfolds <- sample(cut(1:nrow(data), breaks = k, labels = F))
+  
+  rmse_results <- rep(NA, k)
+  for(fold in 1:k){
+    # Create the training and test data
+    data$fold <- cvfolds
+  
+    # We choose the current fold to test
+    id_test <- fold
+    test_data  <- data[cvfolds == id_test, ]
+    train_data <- data[cvfolds != id_test, ]
+    fit       <- lm(dFRS ~ . - fold, data=train_data)
+    predicted       <- predict(fit, newdata=test_data)
+    residuals <- test_data$dFRS - predicted
+    se    <- (residuals)^2
+    mse   <- mean(se)
+    rmse <- sqrt(mse)
+    rmse_results[fold] <- rmse
+  }
+  # The mean of all the RMSE
+  return(mean(rmse_results))
+}
+
+(cv_rmse(als_data, 10))
+(cv_rmse(als_data, 2))
+
+```
+
 
 ## Q6: Why do you think the estimated RMSE is WORSE for low k?
 
+A low k value results in a smaller training set for each fold. This introduces a pessimistic bias because the model is trained on significantly less data than is available in the full dataset, leading to an overestimation of the error. Furthermore, low k increases the variance of our estimate, as the results become highly sensitive to how the data was split in those few large groups.
 
 # Why we can NEVER trust the training error
 
