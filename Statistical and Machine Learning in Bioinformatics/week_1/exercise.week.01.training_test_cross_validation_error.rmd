@@ -201,6 +201,36 @@ tibble(x=1:length(cvfolds), y=cvfolds) %>%
 
 This time you should use a new partition of the data into 10 folds.
 
+```{r}
+
+# New folds
+cvfolds <- sample(cut(1:nrow(als_data), breaks = 10, labels = F))
+
+rmse_results <- rep(NA, 10)
+
+for(fold in 1:10){
+  # Create the training and test data
+  als_data$fold <- cvfolds
+
+  # We choose the current fold to test
+  id_test <- fold
+  als_test_data  <- als_data[cvfolds == id_test, ]
+  als_train_data <- als_data[cvfolds != id_test, ]
+  fit       <- lm(dFRS ~ . - fold, data=als_train_data)
+  predicted       <- predict(fit, newdata=als_test_data)
+  residuals <- als_test_data$dFRS - predicted
+  se    <- (residuals)^2
+  mse   <- mean(se)
+  rmse <- sqrt(mse)
+  rmse_results[fold] <- rmse
+}
+# The mean of all the rmse
+(mean(rmse_results))
+
+barplot(rmse_results, names.arg = 1:10, main = "RMSE by Fold", 
+        xlab = "Fold", ylab = "RMSE", col = "steelblue")
+```
+
 
 ## Q4: Why did you get a different RMSE?
 
