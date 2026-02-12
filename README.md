@@ -15,28 +15,28 @@ This repository contains coursework and projects organized by semester.
 
 ---
 
-## 📂 [Semester 1](semester-1)
+## 📂 [Semester 1](semester_1)
 
-### 🔹 [Computational Thinking](semester-1/computational-thinking)
+### 🔹 [Computational Thinking](semester_1/computational_thinking)
 Foundational programming and algorithmic thinking for bioinformatics. Covers data structures, algorithm design, and basic sequence analysis.
 
-### 🔹 [Data Science in Bioinformatics](semester-1/data-science-in-bioinformatics)
+### 🔹 [Data Science in Bioinformatics](semester_1/data_science_in_bioinformatics)
 Introduction to probability theory, statistical inference, and data analysis methods for biological datasets using R.
 
-### 🔹 [Evolutionary Thinking](semester-1/evolutionary-thinking)
+### 🔹 [Evolutionary Thinking](semester_1/evolutionary_thinking)
 Evolutionary principles, phylogenetics, and population genetics through computational methods.
 
-## 📂 [Semester 2](semester-2)
+## 📂 [Semester 2](semester_2)
 
-### 🔹 [Algorithms in Bioinformatics](semester-2/algorithms-in-bioinformatics)
+### 🔹 [Algorithms in Bioinformatics](semester_2/algorithms_in_bioinformatics)
 Advanced algorithmic solutions for biological sequence analysis including dynamic programming, HMMs, suffix trees, and phylogenetic methods.
 
-### 🔹 [Statistical & Machine learning in Bioinformatics](semester-2/statistical-and-machine-learning-in-bioinformatics)
+### 🔹 [Statistical & Machine learning in Bioinformatics](semester_2/statistical_and_machine_learning_in_bioinformatics)
 Statistical inference and machine learning for genomic data, including regression, classification, dimensionality reduction, and hypothesis testing.
 
-### 🔹 [High Performance Computing for Data Analysis](semester-2/high-performance-computing-for-data-analysis)
+### 🔹 [High Performance Computing for Data Analysis](semester_2/high_performance_computing_for_data_analysis)
 Scalable computational approaches for big genomic data using parallelization, cluster computing, and optimization techniques.
 
-## 📂 [Semester 3](semester-3)
+## 📂 [Semester 3](semester_3)
 
-## 📂 [Semester 4](semester-4)
+## 📂 [Semester 4](semester_4)
