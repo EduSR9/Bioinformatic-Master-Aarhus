@@ -157,12 +157,11 @@ ggplot(data = pseudo_df, aes(x=magic, fill = reponse_binary)) +
 m1 <- glm(data = pseudo_df, formula = logistic01 ~ V1608 + V3630 + V2976 + V5864 + V1709 + V1777 + V148 + V9460 + V287 + V7702 ,  family = "binomial" )
 m0 <- glm(data = pseudo_df, formula = logistic01 ~ 1,  family = "binomial" )
 (1 - m1$deviance/m0$deviance)
-
+#pseudo_df$reponse_binary <- factor(pseudo_df$reponse_binary, levels = c("Control", "Case"))
 pseudo_df$magic <-m1$fitted.values
 ggplot(data = pseudo_df, aes(x=magic, fill = reponse_binary)) + 
   geom_dotplot(binwidth = 0.0150)+ 
-  scale_fill_colorblind()+
-  xlab("2 logistic regression predictors") +
+  xlab("10 logistic regression predictors") +
   NULL
 ```
 
