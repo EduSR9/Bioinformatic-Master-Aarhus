@@ -1,0 +1,176 @@
+---
+title: "LDA"
+author: "Thomas B"
+# date: "3/4/2021"
+output: 
+  html_document: 
+      theme: cerulean
+      highlight: pygments
+      toc: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(MASS)
+library(tidyverse)
+library(patchwork)
+# install.packages("remotes")
+# remotes::install_github("allisonhorst/palmerpenguins")
+library(palmerpenguins)
+library(ggthemes)
+```
+
+## In brief 
+
+We use the Palmer penguins data as an alt to iris data to exemplify LDA  as a classifier. 
+
+## Preparing data
+
+```{r}
+set.seed(0)
+data("penguins")
+dim(penguins)
+head(penguins) %>% knitr::kable()
+
+summary(penguins)
+penguins_sample <- penguins %>% 
+  filter(!is.na(sex)) %>%
+  filter(!is.na(species))
+dim(penguins_sample)
+summary(penguins_sample)
+# penguins_sample <- penguins_sample[sample(x = 1:333 , size = 333, replace = F), c(1,3,4,5,6,7)] 
+head(penguins_sample) %>% knitr::kable()
+dim(penguins_sample)
+```
+
+## Predictors 
+
+We look visuallyat how good are predictors at separating the 3 penguins species. 
+
+```{r, warning=FALSE}
+ggplot(penguins_sample, aes(x=log10(body_mass_g+1), y = bill_length_mm, color = species )) +
+  geom_point(size=1) + 
+  scale_color_colorblind()+
+  stat_ellipse()+
+  theme_minimal(base_size = 14)+
+  NULL
+
+ggplot(penguins_sample, aes(x=log10(body_mass_g+1), y = flipper_length_mm, color = species )) +
+  geom_point(size=1) + 
+  scale_color_colorblind()+
+  stat_ellipse()+
+  theme_minimal(base_size = 14)+
+  NULL
+  
+```
+
+
+## LDA
+```{r}
+penguins_sample.lda <- lda(species ~ body_mass_g + bill_length_mm, 
+                           data = penguins_sample)
+
+# penguins_sample.lda <- lda(species ~ ., 
+#                            data = penguins_sample)
+
+penguins_sample.lda
+names(penguins_sample.lda)
+```
+
+Prior probabilities of groups – This defines the prior probability of the response classes for an observation. 
+
+Group Means – This defines the mean value ($\mu_k$) for response classes for a particular $X=x$. This indicates means values of different features when they fall to a particular response class. The more the difference between mean, the easier it will be to classify observation.
+
+Coefficients of the linear discriminant function– 
+This defines the coefficient of the linear equation that is used to classify the response classes. Note that in this model there are three response classes and so there will be two sets of coefficients (LD1 and LD2).
+
+Proportion of trace - This is the percentage separation achieved by each discriminant function. For example, for the penguins_sample data we get the same values as just calculated.
+
+```{r}
+
+predictions <- penguins_sample.lda %>% predict()
+
+names(predictions)
+
+predictions$class[1:10] 
+
+predictions$posterior[1:10,] %>% knitr::kable()
+
+predictions$x[1:10,]
+
+my_preds <- predictions$class
+length(my_preds)
+length(penguins_sample$species)
+
+```
+
+
+Tidying up as one predictions tbl
+```{r}
+pred_tbl <- as_tibble(predictions$x)
+pred_tbl$predictions <- predictions$class
+pred_tbl$species <- penguins_sample$species
+
+pred_tbl%>% head()%>% knitr::kable()
+```
+
+
+
+```{r fig.height=8, fig.width=8}
+pred_tbl %>%
+  ggplot(aes(x=LD1, y=LD2, 
+              color = predictions)) +
+  geom_point() +
+  theme_minimal() +
+  theme(legend.position = 'top')+
+  stat_ellipse()+
+  scale_color_colorblind()+
+  NULL
+
+
+
+main <- ggplot(data =pred_tbl) +
+  geom_point(
+    aes(LD1, LD2, shape = predictions$class, color = penguins_sample$species), 
+    data = as_tibble(predictions$x)) +
+  stat_ellipse(aes(x=LD1, y= LD2, color = penguins_sample$species))+
+  theme_minimal() +
+  theme(legend.position = 'bottom')+
+  scale_color_colorblind()+
+  NULL
+
+LD1_plot <- as_tibble(predictions$x) %>% 
+  ggplot(aes(LD1,  color = predictions$class)) +
+  geom_density() +
+  geom_rug() +
+  theme_minimal() +
+  scale_color_colorblind()+
+  theme(legend.position = 'none')+
+  NULL
+
+LD2_plot <- as_tibble(predictions$x) %>% 
+  ggplot(aes(LD2,  color = predictions$class)) +
+  geom_density() +
+  geom_rug() +
+  theme_minimal() +
+  theme(legend.position = 'none') +
+  scale_color_colorblind()+
+  coord_flip()+
+  NULL
+
+
+LD1_plot  + plot_spacer() + main + LD2_plot + plot_layout(widths = c(3, 1), heights = c(1, 3))
+
+```
+
+
+
+
+
+
+
+
+
+
+

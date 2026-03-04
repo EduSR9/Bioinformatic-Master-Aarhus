@@ -364,7 +364,7 @@ pc_model <- glm(response ~ pc1 + pc2, data = tcgadf_clean, family = "binomial")
 summary(pc_model)
 ```
 
-This statistical output confirms that your model is highly successful: the extremely low p-values `(<2e-``16`) prove that PC1 and PC2 are both highly significant predictors that effectively capture the biological signal from the original 500 genes. The substantial drop in deviance (from 1481.5 to 1036.9) indicates that these two synthetic variables drastically improve the model's ability to distinguish between normal and cancerous tissue, providing a robust classification without the risk of overfitting thousands of individual predictors.
+This statistical output confirms that your model is highly successful: the extremely low p-values ``` (<2e-``16 ```) prove that PC1 and PC2 are both highly significant predictors that effectively capture the biological signal from the original 500 genes. The substantial drop in deviance (from 1481.5 to 1036.9) indicates that these two synthetic variables drastically improve the model's ability to distinguish between normal and cancerous tissue, providing a robust classification without the risk of overfitting thousands of individual predictors.
 
 ## \> Q5: try and combine up to max 3 predictors to make your classification ..
 
