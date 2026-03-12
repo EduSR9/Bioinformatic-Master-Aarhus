@@ -8,7 +8,8 @@
 *.vcf
 *.gz
 
-# Session Data files
+# Session and Data files
+*.rds
 .RData
 .RDataTmp
 
@@ -53,3 +54,7 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# OS generated temporary files
+*Zone.Identifier
+.DS_Store
