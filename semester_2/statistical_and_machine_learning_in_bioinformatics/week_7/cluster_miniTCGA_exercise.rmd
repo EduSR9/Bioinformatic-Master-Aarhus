@@ -1,0 +1,122 @@
+---
+title: "Exercise for data clustering on TCGA data"
+author: "Samuele Soraggi"
+date: 'Last update: `r Sys.time()`'
+output: 
+  html_document:
+    theme: united
+    code_folding: show
+    toc: true
+editor_options: 
+  chunk_output_type: console
+--- 
+
+# Load data and packages
+
+```{r}
+set.seed(0)
+
+library(tidyverse)
+library(uwot) # umap library
+library(FNN)  # nearest neighbor indexer library
+library(ggplot2)
+library(reshape2)  # for pivoting dataframes
+library(cluster)
+library(stats)
+
+df <- read_rds(file = "miniTCGA.3349x4006.rds") 
+
+L <- dim(df)[1]
+TCGA <- df %>% filter(!is.na(response))
+dataTCGA <- TCGA[,7:L]
+
+VARS=apply(dataTCGA,2,var)
+hist(VARS, breaks=30, main = "Features' Variance Histogram")
+
+VARS_choice = VARS[VARS>.75]
+VARS_remove = VARS[VARS<=.5]
+
+dataTCGA_var = dataTCGA[, names(dataTCGA) %in% c(names(VARS_choice)) ]
+
+cat("dimensions of the data with HIGHLY VARIABLE features:",dim(dataTCGA_var),"\n")
+
+```
+
+
+```{r}
+umapTCGA <- umap(dataTCGA_var, metric = "euclidean", n_neighbors = 10)
+```
+
+# k-means
+
+**To do: Now, plot the obtained UMAP and then cluster:**
+
+**- the data with variable features using k-means**
+**- the data with all features using k-means**
+**- the umap coordinates using k-means**
+
+**Choose the value of k=8 and use the function `stats::kmeans`. Also, time how long it does take for each k-means to run, which can be done with `system.time({command to run here})["elapsed"]`.**
+
+```{r}
+df <- as.data.frame(umapTCGA)
+colnames(df) <- c("UMAP_1", "UMAP_2")
+
+df$color_value <- as.factor(TCGA$response)
+
+# Plot
+ggplot(df, aes(x = UMAP_1, y = UMAP_2, color = color_value)) +
+  geom_point(size = 3, alpha=.5) +
+  labs(title = "UMAP on TCGA", x = NULL, y = NULL) +
+  scale_color_manual(values = c("blue", "red")) +  # adjust colors to your liking
+  theme_minimal()
+```
+
+We apply k-means to UMAP and data matrices, print elapsed time and plot clusterings.
+
+```{.r}
+#YOUR CODE HERE
+```
+
+**To do: Can you** 
+**- explain the difference in time executions between the three kmeans. Are those time in proportions to each other by some factor?**
+**- notice any difference in the clusterings?**
+
+**To Do: From now on, we abandon the data matrix with all features, and we used only the reduced matrix and the UMAP matrix. Try to calculate the silhouette score of each of the three clusterings for comparison. This is easily done with the function `silhouette`. The result of that function can be used in the function `plot` directly to print the results. Use the output of `silhouette` to calculate also the average silhouette score, which you can use to have an idea of how good the clustering is.**
+
+```{.r}
+ #Your code here
+```
+
+
+The silhouette for the data should be pretty bad compared to the one in the UMAP. However both clusterings are not optimal, because in both silhouettes there is a rapid decrease.
+
+**To do: Can you hypothesize two causes for why this might happen?** 
+
+**To do: Try various approaches as discussed in class for the k-means to address your hypothesized issues.**
+
+
+```{.r}
+#YOUR CODE HERE
+```
+
+The UMAP results should be clearly better even after ddressing the issues. 
+
+**To do: Based on the results you obtained with kmeans, do you think the kmeans is a good algorithm to cluster a complex dataset where clusters have different densities and are affected by noise?**
+
+**To do: Try one of the algorithms mentioned in class, or another one you know. Look at the lecture slides to find the names. Then, evaluate the results with silhouette scores and plotting the UMAP for visualization. Note: Some methods might need to install a package, because not contained in the package `cluster`.**
+
+```{.r}
+#YOUR CODE HERE
+```
+
+**To do: try the spectral clustering based on the eigenvector of the dissimilarity matrix of the data (last lecture slide). Take the code [from this example](https://rpubs.com/gargeejagtap/SpectralClustering) and adapt it to your UMAP matrix after reading the explanations on the webpage, which is written nicely. Evaluate the clustering you obtain: you should see it does not improve much, and in fact does a worse job at clustering than kmeans for our application.**
+
+```{.r}
+#YOUR CODE HERE
+```
+
+**To do, optional: try to calculate the matrix S above with a different distance in `dist`, or evaluate `dist` into a gaussian distribution where you can choose the standard deviation. See how results change for your clustering.**
+
+```{.r}
+#YOUR CODE HERE
+```

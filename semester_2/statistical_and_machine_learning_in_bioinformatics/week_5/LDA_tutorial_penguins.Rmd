@@ -21,9 +21,9 @@ library(palmerpenguins)
 library(ggthemes)
 ```
 
-## In brief 
+## In brief
 
-We use the Palmer penguins data as an alt to iris data to exemplify LDA  as a classifier. 
+We use the Palmer penguins data as an alt to iris data to exemplify LDA as a classifier.
 
 ## Preparing data
 
@@ -44,9 +44,9 @@ head(penguins_sample) %>% knitr::kable()
 dim(penguins_sample)
 ```
 
-## Predictors 
+## Predictors
 
-We look visuallyat how good are predictors at separating the 3 penguins species. 
+We look visuallyat how good are predictors at separating the 3 penguins species.
 
 ```{r, warning=FALSE}
 ggplot(penguins_sample, aes(x=log10(body_mass_g+1), y = bill_length_mm, color = species )) +
@@ -65,8 +65,8 @@ ggplot(penguins_sample, aes(x=log10(body_mass_g+1), y = flipper_length_mm, color
   
 ```
 
-
 ## LDA
+
 ```{r}
 penguins_sample.lda <- lda(species ~ body_mass_g + bill_length_mm, 
                            data = penguins_sample)
@@ -78,12 +78,11 @@ penguins_sample.lda
 names(penguins_sample.lda)
 ```
 
-Prior probabilities of groups – This defines the prior probability of the response classes for an observation. 
+Prior probabilities of groups – This defines the prior probability of the response classes for an observation.
 
 Group Means – This defines the mean value ($\mu_k$) for response classes for a particular $X=x$. This indicates means values of different features when they fall to a particular response class. The more the difference between mean, the easier it will be to classify observation.
 
-Coefficients of the linear discriminant function– 
-This defines the coefficient of the linear equation that is used to classify the response classes. Note that in this model there are three response classes and so there will be two sets of coefficients (LD1 and LD2).
+Coefficients of the linear discriminant function– This defines the coefficient of the linear equation that is used to classify the response classes. Note that in this model there are three response classes and so there will be two sets of coefficients (LD1 and LD2).
 
 Proportion of trace - This is the percentage separation achieved by each discriminant function. For example, for the penguins_sample data we get the same values as just calculated.
 
@@ -105,8 +104,8 @@ length(penguins_sample$species)
 
 ```
 
-
 Tidying up as one predictions tbl
+
 ```{r}
 pred_tbl <- as_tibble(predictions$x)
 pred_tbl$predictions <- predictions$class
@@ -114,8 +113,6 @@ pred_tbl$species <- penguins_sample$species
 
 pred_tbl%>% head()%>% knitr::kable()
 ```
-
-
 
 ```{r fig.height=8, fig.width=8}
 pred_tbl %>%
@@ -163,14 +160,3 @@ LD2_plot <- as_tibble(predictions$x) %>%
 LD1_plot  + plot_spacer() + main + LD2_plot + plot_layout(widths = c(3, 1), heights = c(1, 3))
 
 ```
-
-
-
-
-
-
-
-
-
-
-

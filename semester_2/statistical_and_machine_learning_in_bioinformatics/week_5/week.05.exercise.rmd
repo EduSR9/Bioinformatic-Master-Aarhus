@@ -33,8 +33,9 @@ The second trick is to take `log()` because we can get rid of $exp(...)$ and tak
 
 The last trick is to develop the $(x - \mu_k)^2$ term as and to recognize again what are terms that depend on $x$ only .. because these can also be seen as constant once you get a given x value there is no information on how to classify
 
+Answered in Obsidian.
 
-## \>Q Implement & compare 2  methods (QDA/LDA/Naive Bayes) with your previous  classifier
+## \>Q Implement & compare 2 methods (QDA/LDA/Naive Bayes) with your previous classifier
 
 Compare the performance of LDA QDA and the method we have used for last week (i.e. logistic regression) for making predictions on the TCGA dataset.
 
@@ -45,6 +46,68 @@ Note you could use any predictors from the TCGA dataset (i.e. individual gene ex
 If you want to look at visuals on LDA predictions check the penguin example file posed on **Brightspace**.
 
 ## \>Q use cross validation to check how accurate are the predictions you make with LDA and QDA
+
+```{r}
+library(MASS)
+library(tidyverse)
+
+# --- 1. DATA LOADING ---
+tcgadf <- read_rds("data/TCGA_cancer_classification/miniTCGA.3349x4006.rds") 
+
+# Transform response to binary (1 for Tumor, 0 for Normal)
+tcgadf <- tcgadf %>%
+  mutate(sampletype = response, 
+         response = ifelse(response == "Tumor", 1, 0))
+
+# --- 2. DATA CLEANING ---
+# We create a clean dataset specifically for these 3 genes to avoid length mismatches
+tcgadf_clean <- tcgadf %>%
+  filter(!is.na(`ANGPTL1.9068`), 
+         !is.na(`NR3C2.4306`), 
+         !is.na(`TMEM220.388335`),
+         !is.na(response))
+
+print(paste("Total samples for analysis:", nrow(tcgadf_clean)))
+
+# --- 3. LDA MODEL WITH CROSS-VALIDATION ---
+# Setting CV = TRUE tells R to run the model multiple times, leaving one sample out each time
+lda_cv <- lda(response ~ `ANGPTL1.9068` + `NR3C2.4306` + `TMEM220.388335`, 
+              data = tcgadf_clean, 
+              CV = TRUE)
+
+# With CV = TRUE, the output is directly the predictions
+lda_cv_class <- lda_cv$class
+lda_cv_table <- table(Predicted = lda_cv_class, Real = tcgadf_clean$response)
+lda_cv_acc   <- sum(diag(lda_cv_table)) / sum(lda_cv_table)
+
+# --- 4. QDA MODEL WITH CROSS-VALIDATION ---
+qda_cv <- qda(response ~ `ANGPTL1.9068` + `NR3C2.4306` + `TMEM220.388335`, 
+              data = tcgadf_clean, 
+              CV = TRUE)
+
+qda_cv_class <- qda_cv$class
+qda_cv_table <- table(Predicted = qda_cv_class, Real = tcgadf_clean$response)
+qda_cv_acc   <- sum(diag(qda_cv_table)) / sum(qda_cv_table)
+
+# --- 5. FINAL COMPARISON ---
+print("--- CROSS-VALIDATED RESULTS ---")
+print(paste("LDA CV Accuracy:", round(lda_cv_acc, 4)))
+print(paste("QDA CV Accuracy:", round(qda_cv_acc, 4)))
+
+# --- 6. LOGISTIC REGRESSION ---
+logit_model <- glm(response ~ `ANGPTL1.9068` + `NR3C2.4306` + `TMEM220.388335`, 
+                   data = tcgadf_clean, 
+                   family = binomial)
+
+logit_probs <- predict(logit_model, type = "response")
+
+logit_class <- ifelse(logit_probs > 0.5, 1, 0)
+
+logit_table <- table(Predicted = logit_class, Real = tcgadf_clean$response)
+logit_acc   <- sum(diag(logit_table)) / sum(logit_table)
+
+print(paste("Logistic Regression Accuracy:", round(logit_acc, 4)))
+```
 
 ## \>Q Get ready to submit your best predictions as a TEAM
 
