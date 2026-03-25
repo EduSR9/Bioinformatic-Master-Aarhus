@@ -32,7 +32,7 @@
 vignettes/*.html
 vignettes/*.pdf
 
-# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+# OAuth2 token
 .httr-oauth
 
 # knitr and R markdown default cache directories
@@ -55,6 +55,12 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-# OS generated temporary files
+# Python / Jupyter Notebooks (Para tus scripts y notebooks)
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# OS generated temporary files (Ajustado para WSL/Windows y Mac)
+*:Zone.Identifier
 *Zone.Identifier
 .DS_Store
