@@ -3,13 +3,11 @@ title: "Statistical & Machine Learning in Bioinformatics"
 subtitle: "Week 3: Intro to Bayesian vs Likelihood"
 author: "Thomas B."
 format:
-  html:
-    theme: paper
-    code-fold: show    
+  gfm:
     toc: true
-    toc-depth: 2       
+    toc-depth: 2
 execute:
-  echo: true           
+  echo: true
 ---
 
 ```r
