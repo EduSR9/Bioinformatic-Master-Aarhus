@@ -2,23 +2,23 @@
 title: "Statistical & Machine Learning in Bioinformatics"
 subtitle: "Week 3: Intro to Bayesian vs Likelihood"
 author: "Thomas B."
-output:
-  html_document:
+format:
+  html:
     theme: paper
-    code_folding: show
+    code-fold: show    
     toc: true
-    toc_depth: 2
-editor_options: 
-  chunk_output_type: inline
-  markdown: 
-    wrap: 72
+    toc-depth: 2       
+execute:
+  echo: true           
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```r
+```{r}
+#| label: setup
+#| include: false
+
 library(tidyverse)
 library(reshape2)
-```
 
 # Goals for the theoretical exercise & R session this week
 
